@@ -250,28 +250,24 @@ namespace DS4BatteryMonitor
 
         private void UpdateUI(int level, bool charging)
         {
-            this.lastLevel = level;
-            this.isCharging = charging;
+            lastLevel = level;
+            isCharging = charging;
             var lang = _config.Languages[_config.CurrentLanguage];
 
-            // Update Battery Bar UI
-            BatteryBar.Width = (this.Width - 2) * (Math.Max(0, level) / 100.0);
+            // --- ウィンドウのコンテキストメニューの多言語化 ---
+            if (MenuTopMost != null) MenuTopMost.Header = lang["TopMost"];
+            if (MenuMinimize != null) MenuMinimize.Header = lang["Min"];
+            // ----------------------------------------------
+
+            // バッテリーバーの更新
+            BatteryBar.Width = Math.Max(0, (this.Width - 2) * (Math.Max(0, level) / 100.0));
             BatteryBar.Fill = charging ? System.Windows.Media.Brushes.DodgerBlue :
                              (level <= 20 ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.LimeGreen);
 
-            // Update Status Text and Tray Tooltip
-            if (level == -1)
-            {
-                StatusText.Text = lang.ContainsKey("Disconnected") ? lang["Disconnected"] : "?";
-                _trayIcon.Text = "DS4: " + (lang.ContainsKey("Disconnected") ? lang["Disconnected"] : "Disconnected");
-            }
-            else
-            {
-                StatusText.Text = charging ? $"⚡{level}%" : $"{level}%";
-                _trayIcon.Text = $"DS4: {level}%";
-            }
+            // テキストの更新
+            StatusText.Text = level == -1 ? (lang["Disconnected"] ?? "?") : (charging ? $"⚡{level}%" : $"{level}%");
 
-            // Redraw tray icon (displays "?" if disconnected)
+            _trayIcon.Text = $"DS4: {(level == -1 ? "Disconnected" : level + "%")}";
             UpdateTrayIcon(level, charging);
         }
 

@@ -9,14 +9,13 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize">
 
-
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="常時手前表示" IsCheckable="True" IsChecked="True" Click="MenuTopMost_Click"/>
-            <MenuItem Header="最小化" Click="MenuMinimize_Click"/>
+            <MenuItem x:Name="MenuTopMost" Header="Always on Top" Click="MenuTopMost_Click"/>
+            <MenuItem x:Name="MenuMinimize" Header="Minimize" Click="MenuMinimize_Click"/>
         </ContextMenu>
     </Window.ContextMenu>
-
+    
     <Border CornerRadius="6" Background="#1E1E1E" BorderBrush="#3C3C3C" BorderThickness="1">
         <Grid MouseDown="Window_MouseDown" Background="Transparent">
             <Grid.OpacityMask>
