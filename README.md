@@ -21,9 +21,6 @@ A lightweight Windows taskbar application to monitor Sony DualShock 4 battery le
 2. Extract the ZIP file to any folder.
 3. Ensure the following files are in the same folder:
     - `DS4BatteryMonitor.exe`
-    - `DS4BatteryMonitor.dll`
-    - `DS4BatteryMonitor.runtimeconfig.json`
-    - `HidSharp.dll`
 4. Run `DS4BatteryMonitor.exe`.
 
 <BR>
@@ -32,9 +29,6 @@ A lightweight Windows taskbar application to monitor Sony DualShock 4 battery le
 2. 任意のフォルダに解凍します。
 3. 以下のファイルが同じフォルダにあることを確認してください：
     - `DS4BatteryMonitor.exe`
-    - `DS4BatteryMonitor.dll`
-    - `DS4BatteryMonitor.runtimeconfig.json`
-    - `HidSharp.dll`
 4. `DS4BatteryMonitor.exe` を実行します。
 
 ## Disclaimer
