@@ -1,6 +1,6 @@
 # DS4 Battery Monitor
-<img width="80" height="20" alt="window" src="https://github.com/user-attachments/assets/465f0b7d-6109-4041-a3ff-bdda17e8a763" />
-<img width="76" height="63" alt="TrayIcon" src="https://github.com/user-attachments/assets/d1ed2802-9a75-4f6d-a801-220819fd7317" />
+<img width="80" height="20" alt="window" src="https://github.com/ZPII3/DS4BatteryMonitor/blob/main/window.png" />
+<img width="76" height="63" alt="TrayIcon" src="https://github.com/ZPII3/DS4BatteryMonitor/blob/main/TrayIcon.png" />
 
 A lightweight Windows taskbar application to monitor Sony DualShock 4 battery levels, built with C# WPF and .NET 8.  
 .NET 8で構築された、Sony DualShock 4のバッテリー残量をタスクトレイで確認できる軽量なC# WPF Windowsアプリです。
