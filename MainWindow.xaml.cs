@@ -100,30 +100,51 @@ namespace DS4BatteryMonitor
                 try
                 {
                     string json = File.ReadAllText(_settingsPath);
-                    _config = JsonSerializer.Deserialize<AppSettings>(json) ?? new();
-                    this.Left = _config.WindowLeft;
-                    this.Top = _config.WindowTop;
+                    _config = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+
+                    // Apply window position
+                    if (!double.IsNaN(_config.WindowLeft)) this.Left = _config.WindowLeft;
+                    if (!double.IsNaN(_config.WindowTop)) this.Top = _config.WindowTop;
+
+                    // Apply visibility
                     if (_config.IsVisible) this.Show(); else this.Hide();
                 }
-                catch { _config = new(); }
+                catch
+                {
+                    _config = new AppSettings();
+                    SaveSettings();
+                }
+            }
+            else
+            {
+                _config = new AppSettings();
+                SaveSettings();
             }
         }
 
         private void SaveSettings()
         {
-            _config.WindowLeft = this.Left;
-            _config.WindowTop = this.Top;
+            // Prevent saving NaN values which causes JSON serialization to fail
+            if (!double.IsNaN(this.Left)) _config.WindowLeft = this.Left;
+            if (!double.IsNaN(this.Top)) _config.WindowTop = this.Top;
             _config.IsVisible = this.IsVisible;
 
-            // Save JSON with formatting and Unicode support (for Japanese characters)
             var options = new JsonSerializerOptions
             {
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All),
-                WriteIndented = true
+                WriteIndented = true,
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals
             };
 
-            string json = JsonSerializer.Serialize(_config, options);
-            File.WriteAllText(_settingsPath, json);
+            try
+            {
+                string json = JsonSerializer.Serialize(_config, options);
+                File.WriteAllText(_settingsPath, json);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Save Error: {ex.Message}");
+            }
         }
 
         private void SetupTrayIcon()
@@ -161,7 +182,7 @@ namespace DS4BatteryMonitor
 
             var aboutItem = new System.Windows.Forms.ToolStripMenuItem("About", null, (s, e) => {
                 var result = System.Windows.MessageBox.Show(
-                    "DS4 Battery Monitor v1.0\n\nOpen GitHub repository in your browser?",
+                    "DS4 Battery Monitor v1.1\n\nOpen GitHub repository in your browser?",
                     "About",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Information);
