@@ -10,6 +10,12 @@
     <Platforms>AnyCPU;x64</Platforms>
     <AssemblyName>DS4BatteryMonitor</AssemblyName>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

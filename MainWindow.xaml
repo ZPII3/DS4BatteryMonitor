@@ -11,7 +11,7 @@
 
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem x:Name="MenuTopMost" Header="Always on Top" Click="MenuTopMost_Click"/>
+            <MenuItem x:Name="MenuTopMost" Header="Always on Top" IsCheckable="True" IsChecked="True" Click="MenuTopMost_Click"/>
             <MenuItem x:Name="MenuMinimize" Header="Minimize" Click="MenuMinimize_Click"/>
         </ContextMenu>
     </Window.ContextMenu>

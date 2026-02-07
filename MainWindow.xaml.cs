@@ -54,6 +54,7 @@ namespace DS4BatteryMonitor
             public double WindowTop { get; set; } = 100;
             public bool IsVisible { get; set; } = false;
             public string CurrentLanguage { get; set; } = "Japanese";
+            public bool IsTopmost { get; set; } = true; 
 
             // Dictionary for localization data
             public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>> Languages { get; set; } = new()
@@ -95,6 +96,8 @@ namespace DS4BatteryMonitor
 
         private void LoadSettings()
         {
+            this.Topmost = _config.IsTopmost;
+
             if (File.Exists(_settingsPath))
             {
                 try
@@ -119,6 +122,11 @@ namespace DS4BatteryMonitor
             {
                 _config = new AppSettings();
                 SaveSettings();
+            }
+            this.Topmost = _config.IsTopmost;
+            if (MenuTopMost != null)
+            {
+                MenuTopMost.IsChecked = _config.IsTopmost;
             }
         }
 
@@ -172,6 +180,7 @@ namespace DS4BatteryMonitor
             {
                 var item = new System.Windows.Forms.ToolStripMenuItem(lName, null, (s, e) => {
                     _config.CurrentLanguage = lName;
+                    UpdateUI(lastLevel, isCharging);
                     SetupTrayIcon();
                     SaveSettings();
                 });
@@ -182,7 +191,7 @@ namespace DS4BatteryMonitor
 
             var aboutItem = new System.Windows.Forms.ToolStripMenuItem("About", null, (s, e) => {
                 var result = System.Windows.MessageBox.Show(
-                    "DS4 Battery Monitor v1.1\n\nOpen GitHub repository in your browser?",
+                    "DS4 Battery Monitor v1.2\n\nOpen GitHub repository in your browser?",
                     "About",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Information);
@@ -254,21 +263,23 @@ namespace DS4BatteryMonitor
             isCharging = charging;
             var lang = _config.Languages[_config.CurrentLanguage];
 
-            // --- ウィンドウのコンテキストメニューの多言語化 ---
             if (MenuTopMost != null) MenuTopMost.Header = lang["TopMost"];
             if (MenuMinimize != null) MenuMinimize.Header = lang["Min"];
-            // ----------------------------------------------
 
-            // バッテリーバーの更新
             BatteryBar.Width = Math.Max(0, (this.Width - 2) * (Math.Max(0, level) / 100.0));
             BatteryBar.Fill = charging ? System.Windows.Media.Brushes.DodgerBlue :
                              (level <= 20 ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.LimeGreen);
 
-            // テキストの更新
             StatusText.Text = level == -1 ? (lang["Disconnected"] ?? "?") : (charging ? $"⚡{level}%" : $"{level}%");
 
             _trayIcon.Text = $"DS4: {(level == -1 ? "Disconnected" : level + "%")}";
             UpdateTrayIcon(level, charging);
+
+            if (_config.IsTopmost)
+            {
+                this.Topmost = false;
+                this.Topmost = true;
+            }
         }
 
         private void UpdateTrayIcon(int level, bool charging)
@@ -336,7 +347,18 @@ namespace DS4BatteryMonitor
             }
         }
 
-        private void MenuTopMost_Click(object sender, RoutedEventArgs e) => this.Topmost = !this.Topmost;
+        private void MenuTopMost_Click(object sender, RoutedEventArgs e)
+        {
+            this.Topmost = !this.Topmost;
+
+            if (MenuTopMost != null)
+            {
+                MenuTopMost.IsChecked = this.Topmost;
+            }
+
+            _config.IsTopmost = this.Topmost;
+            SaveSettings();
+        }
 
         private void MenuMinimize_Click(object sender, RoutedEventArgs e) => this.Hide();
 
